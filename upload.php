@@ -1,22 +1,27 @@
 <?php
-if (isset($_POST['submit']) && isset($_FILES['my_audio'])){
+if (isset($_POST['submit']) && empty($_FILES['my_audio'])){
+    // connection to the database
     include 'db_conn.php';
+
+    // var_dump(empty($_FILES['my_audio']));
+    // print_r($_FILES);
 
     $audio_name = $_FILES['my_audio']['name'];
     $tmp_name = $_FILES['my_audio']['tmp_name'];
     $error = $_FILES['my_audio']['error'];
-    // var_dump ($audio_name,$tmp_name);
     // print_r($_FILES);
 
     if ($error === 0 ) {
-
+        // get the audio extension
         $audio_ext = pathinfo($audio_name,PATHINFO_EXTENSION);
-
+        // audio extension lowercase
         $audio_ext_final = strtolower($audio_ext);
         // print_r($audio_ex);
 
+        // extension allowed
         $allowed_exts = array("mp3","m4a","ogg","3gp","wav");
 
+        // if extension allowed then ...
         if (in_array($audio_ext_final,$allowed_exts)) {
 
             $new_audio_name = uniqid("audio-",true). '.' .$audio_ext_final;
@@ -41,5 +46,8 @@ if (isset($_POST['submit']) && isset($_FILES['my_audio'])){
 
 
 }else{
-    header("Location: index.php");
+    //redirect to index.php
+    header("Location:index.php");
+
+
 }
